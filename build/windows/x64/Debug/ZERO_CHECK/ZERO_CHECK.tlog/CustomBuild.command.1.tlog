@@ -1,0 +1,10 @@
+^C:\USERS\ABDAL\ONEDRIVE\DESKTOP\FACTORY_DART\BUILD\WINDOWS\CMAKEFILES\516295839286B019C004EBC67DB261E6\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/abdal/OneDrive/Desktop/factory_dart/windows -BC:/Users/abdal/OneDrive/Desktop/factory_dart/build/windows --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/abdal/OneDrive/Desktop/factory_dart/build/windows/factory_dart.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

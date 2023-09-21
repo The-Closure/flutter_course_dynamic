@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
-
-  int x = 3;
 }
 
 class MyApp extends StatelessWidget {
@@ -19,104 +17,143 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: StreamBuilder(
-          stream: getStreamOfData(1000),
-          builder: (context, snapshot) {
-            return Stack(
-              children: [
-                Container(
-                  width: 300,
-                  height: 300,
-                  decoration:
-                      BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-                ),
-                Transform.rotate(
-                  angle: pi / snapshot.data,
-                  child: Container(
-                    width: 20,
-                    height: 200,
-                    color: Colors.red,
-                  ),
-                ),
-              ],
-            );
+      appBar: AppBar(),
+      body: ListView.builder(itemBuilder: (context, index) {
+        return Dismissible(
+          onDismissed: (direction) {
+            if (direction == DismissDirection.endToStart) {
+              print("Call");
+            } else {
+              print("Message");
+            }
           },
-        ),
-
-        // ! How to Fetch Data from a Function
-        // child: FutureBuilder(
-        //   future: getData(),
-        //   builder: (context, snapshot) {
-        //     if (snapshot.hasData) {
-        //       return Text(snapshot.data.toString());
-        //     } else if (snapshot.connectionState == ConnectionState.waiting){
-        //       return CircularProgressIndicator();
-        //     }
-        //     else {
-        //       return Text("Error in Fetching Data");
-        //     }
-        //   },
-        // ),
-
-        // ? Form Responsive Design
-        // child: LayoutBuilder(
-        //   builder: (context, constraints) {
-        //     if (constraints.maxWidth > 600) {
-        //       return Row(
-        //         children: [
-        //           FlutterLogo(),
-        //           Container(
-        //             width: 300,
-        //             height: 300,
-        //             color: Colors.red,
-        //           )
-        //         ],
-        //       );
-        //     } else {
-        //       return Container(
-        //         color: Colors.blue,
-        //       );
-        //     }
-        //   },
-        // ),
-
-        // child: Builder(
-        //   builder: (context) {
-        //     if(age > 20){
-
-        //     return CircularProgressIndicator();
-        //     }
-        //     else {
-        //       return FlutterLogo();
-        //     }
-        //   }
-        // ),
+          // direction: DismissDirection.startToEnd,
+          background: Container(
+            color: Colors.red,
+            child: Row(
+              children: [
+                Icon(Icons.delete),
+              ],
+            ),
+          ),
+          key: GlobalKey(),
+          child: CheckboxListTile(
+controlAffinity: ListTileControlAffinity.leading,
+            value: value,
+            onChanged: (val) {
+              setState(() {
+                value = val!;
+              });
+            },
+            title: Text("Hello Man"),
+          ),
+        );
+      }),
+      floatingActionButton: FloatingActionButton.small(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SecondPage(),
+              ));
+        },
       ),
     );
   }
 }
 
-Future getData() async {
-  int x = 6;
-  await Future.delayed(
-    Duration(seconds: 3),
-    () {},
-  );
-  return x = x + 6;
+bool value = false;
+
+class SecondPage extends StatefulWidget {
+  const SecondPage({super.key});
+
+  @override
+  State<SecondPage> createState() => _SecondPageState();
 }
 
-Stream getStreamOfData(int Max) async* {
-  for (var i = 1; i < Max; i++) {
-    await Future.delayed(
-      Duration(seconds: 1),
+double height = 400;
+int counter = 0;
+
+class _SecondPageState extends State<SecondPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    counter++;
+                  });
+                  print('I am an Elevated button');
+                  print(counter);
+                },
+                child: Text("press me")),
+          ),
+          Checkbox(
+              value: value,
+              onChanged: (val) {
+                setState(() {
+                  value = val!;
+                });
+              }),
+          OutlinedButton(
+              onPressed: () {
+                setState(() {
+                  height = 400;
+                });
+                print('I am an Outlined button');
+              },
+              child: Text("press me")),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                height = 200;
+              });
+              print('I am an Text button');
+            },
+            child: Text("press me"),
+          ),
+          Hero(
+            tag: 'animation',
+            child: InkWell(
+              onTap: (){
+                print("object");
+              },
+              child: AnimatedContainer(
+                duration: Duration(seconds: 3),
+                child: Center(
+                  child: Text(
+                    counter.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                height: height,
+                color: Colors.orange,
+              ),
+            ),
+          ),
+        ],
+      ),
+      // floatingActionButton: FloatingActionButton(onPressed: (){
+      //   Navigator.pop(context);
+      // }),
     );
-    yield i;
   }
 }

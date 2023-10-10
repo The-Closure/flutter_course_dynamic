@@ -83,65 +83,66 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(AppStrings().TITLE),
       ),
-      body: SizedBox(
-        height: 300,
-        child: ListWheelScrollView(itemExtent: 50, children: [
-          Container(
-            width: 200,
-            height: 200,
-            child: Text("Test"),
-            color: Colors.red[200],
-          ),
-          Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ),
-           Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ), Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ), Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ), Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ), Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ), Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ), Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ),
-          Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ),
-          Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          ),
-          Container(
-            width: 200,
-            height: 200,
-            color: Colors.red[200],
-          )
-        ]),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 400,
+              child: ReorderableListView.builder(
+                itemCount: names.length,
+                onReorder: (oldIndex, newIndex) {
+                  // String temp = names[oldIndex];
+                  // setState(() {
+                  //  names.removeAt(oldIndex);
+                  //  names.insert(newIndex-1, temp);
+                  // });
+      
+                  setState(() {
+                    if (oldIndex < newIndex) {
+                      newIndex -= 1;
+                    }
+                    final String widget = names.removeAt(oldIndex);
+                    names.insert(newIndex, widget);
+                  });
+                },
+                itemBuilder: (context, index) => ListTile(
+                  key: GlobalKey(),
+                  title: Text(names[index]),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 300,
+              child: ListWheelScrollView(magnification: 2,useMagnifier: true,itemExtent: 15, children: [
+                Container(
+                  width: 200,
+                  height: 200,
+                  color: Colors.red[200],
+                ),
+                Container(
+                  width: 200,
+                  height: 200,
+                  color: Colors.red[200],
+                ),
+                Container(
+                  width: 200,
+                  height: 200,
+                  color: Colors.red[200],
+                ),
+                Container(
+                  width: 200,
+                  height: 200,
+                  color: Colors.red[200],
+                ),
+                Container(
+                  width: 200,
+                  height: 200,
+                  color: Colors.red[200],
+                )
+              ]),
+            )
+          ],
+        ),
       ),
 
       floatingActionButton: FloatingActionButton(

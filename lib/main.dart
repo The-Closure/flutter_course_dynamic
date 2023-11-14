@@ -1,4 +1,8 @@
+import 'package:animation_tween/list_page.dart';
+import 'package:animation_tween/theme/theme.dart';
+import 'package:animation_tween/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,8 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
+    return ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: Builder(
+        builder: (context) => MaterialApp(
+          theme: Provider.of<ThemeProvider>(context).themeData,
+          home: const ListPage(),
+        ),
+      ),
     );
   }
 }
@@ -31,16 +41,18 @@ class _HomePageState extends State<HomePage>
   double padding = 20;
   late Animation<Color?> colorAnimation;
   late Animation<double> sizeAnimation;
+  late Animation<double> curve;
 
   late AnimationController controller;
   @override
   void initState() {
     super.initState();
     controller = AnimationController(
-        duration: const Duration(milliseconds: 200), vsync: this);
+        duration: const Duration(milliseconds: 2000), vsync: this);
+    curve = CurvedAnimation(parent: controller, curve: Curves.bounceInOut);
 
     colorAnimation =
-        ColorTween(begin: Colors.grey, end: Colors.red).animate(controller);
+        ColorTween(begin: Colors.grey, end: Colors.red).animate(curve);
 
     sizeAnimation = TweenSequence(
       <TweenSequenceItem<double>>[
@@ -49,7 +61,7 @@ class _HomePageState extends State<HomePage>
         TweenSequenceItem(
             tween: Tween<double>(begin: 300, end: 200), weight: 50),
       ],
-    ).animate(controller);
+    ).animate(curve);
 
     controller.addListener(() {
       print(controller.value);
@@ -114,7 +126,7 @@ class _HomePageState extends State<HomePage>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         MaterialButton(
-                          color: Colors.red,
+                          color: Theme.of(context).primaryColor,
                           onPressed: () {
                             setState(() {
                               color = Colors.green;
@@ -138,6 +150,7 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
                 AnimatedOpacity(
+                  curve: Curves.easeInOutCirc,
                   duration: const Duration(seconds: 2),
                   opacity: opacity,
                   child: const Text(
@@ -149,8 +162,9 @@ class _HomePageState extends State<HomePage>
                 ),
                 const SizedBox(height: 25),
                 AnimatedPadding(
+                  curve: Curves.bounceInOut,
                   padding: EdgeInsets.all(padding),
-                  duration: const Duration(seconds: 2),
+                  duration: const Duration(seconds: 1),
                   child: Container(
                     color: Colors.black,
                     width: 200,
@@ -171,8 +185,9 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
                 TweenAnimationBuilder(
+                  curve: Curves.slowMiddle,
                   tween: Tween(begin: 0.0, end: 1.0),
-                  duration: const Duration(seconds: 1),
+                  duration: const Duration(seconds: 3),
                   builder: (context, value, child) {
                     return Padding(
                       padding: EdgeInsets.only(top: value * 50),
